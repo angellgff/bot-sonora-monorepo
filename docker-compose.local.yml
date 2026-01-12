@@ -1,0 +1,40 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+        - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY}
+        - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY}
+        - NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=${NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY}
+        - NEXT_PUBLIC_TUGUIA_URL=${NEXT_PUBLIC_TUGUIA_URL}
+        - NEXT_PUBLIC_TUGUIA_ANON_KEY=${NEXT_PUBLIC_TUGUIA_ANON_KEY}
+        - NEXT_PUBLIC_PIPECAT_URL=http://localhost:7860
+        - PIPECAT_CHAT_URL=http://backend:7861/api/chat
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY}
+      - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY}
+      - NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY=${NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY}
+      - NEXT_PUBLIC_TUGUIA_URL=${NEXT_PUBLIC_TUGUIA_URL}
+      - NEXT_PUBLIC_TUGUIA_ANON_KEY=${NEXT_PUBLIC_TUGUIA_ANON_KEY}
+      - NEXT_PUBLIC_PIPECAT_URL=http://localhost:7860
+      - PIPECAT_CHAT_URL=http://backend:7861/api/chat
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "7860:7860"
+      - "7861:7861"
+    env_file:
+      - .env
+    restart: unless-stopped
